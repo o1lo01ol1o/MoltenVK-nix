@@ -8,13 +8,13 @@ let
     });
   nixpkgs' = import pinnedNixpkgsUnstable { };
   moltenVkSrc = builtins.fetchGit {
-      url = "https://github.com/KhronosGroup/MoltenVK.git";
-      rev = "70749b0618695128abb886b4c6808bc9124786c0";
-    };
+    url = "https://github.com/KhronosGroup/MoltenVK.git";
+    rev = "70749b0618695128abb886b4c6808bc9124786c0";
+  };
 in { nixpkgs ? nixpkgs' }:
 with nixpkgs;
 let
-  
+
   spirv-cross = import ./nix/spirv-cross.nix {
     inherit stdenv fetchFromGitHub cmake python3 ninja lib moltenVkSrc;
   };
@@ -56,7 +56,8 @@ let
   };
 
   vulkan-layers = import ./nix/vulkan-layers.nix {
-    inherit stdenv fetchFromGitHub cmake python3 ninja vulkan-headers glslang spirv-headers spirv-tools;
+    inherit stdenv fetchFromGitHub cmake python3 ninja vulkan-headers glslang
+      spirv-headers spirv-tools;
   };
 
   xcodeenvSrc = builtins.fetchGit {
@@ -111,39 +112,38 @@ let
     enableParallelBuilding = true;
 
   };
-  moltenVk = stdenv.mkDerivation rec {
-    pname = "MoltenVk";
-    src = moltenVKWithExternals;
-    version = moltenVKWithExternals.version;
-    buildCommand = ''
-      mkdir $out
-      mkdir $out/build
-      cp -r $src/. $out
-      chmod -R +w $out
+in stdenv.mkDerivation rec {
+  pname = "MoltenVk";
+  src = moltenVKWithExternals;
+  version = moltenVKWithExternals.version;
+  buildCommand = ''
+    mkdir $out
+    mkdir $out/build
+    cp -r $src/. $out
+    chmod -R +w $out
 
-      cd $out
-      export PATH=${xcodewrapper}/bin:$PATH
-      xcodebuild -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package" -derivedDataPath "$out/build" build
-    '';
-    propagatedBuildInputs = [
-      spirv-cross
-      cereal
-      vulkan-portability
-      vulkan-tools
-      vulkan-headers
-      glslang
-      spirv-headers
-      spirv-tools
-    ];
-  };
-in {
-  moltenVk = moltenVk;
-  vulkan-loader = vulkan-loader;
-  spirv-tools = spirv-tools;
-  vulkan-layers = vulkan-layers;
-  vulkan-tools = vulkan-tools;
-  vulkan-headers = vulkan-headers;
-  glslang = glslang;
-  spirv-headers = spirv-headers;
+    cd $out
+    export PATH=${xcodewrapper}/bin:$PATH
+    xcodebuild -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package" -derivedDataPath "$out/build" build
+  '';
+  propagatedBuildInputs = [
+    spirv-cross
+    cereal
+    vulkan-portability
+    vulkan-tools
+    vulkan-headers
+    glslang
+    spirv-headers
+    spirv-tools
+    vulkan-loader
+    vulkan-layers
+  ];
+  # TODO: iOS condition here.
+  setupHook = writeText "setup-hook" ''
+    export VK_LAYER_PATH=${vulkan-layers}/share/vulkan/explicit_layer.d
+    export VK_ICD_FILENAMES=@out@/Package/Release/MoltenVK/macOS/dynamic/MoltenVK_icd.json
+    export DYLD_LIBRARY_PATH=@out@/Package/Release/MoltenVK/macOS/dynamic/
+  '';
+
 }
 

@@ -15,6 +15,11 @@ stdenv.mkDerivation rec {
     '';
 
   enableParallelBuilding = true;
+  # Is this needed?
+  #     # Help vulkan-loader find the validation layers
+  # setupHook = writeText "setup-hook" ''
+  #   export XDG_DATA_DIRS=@out@/share:$XDG_DATA_DIRS
+  # '';
 
   buildInputs = [ cmake python3 ninja vulkan-headers ];
 
