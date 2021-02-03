@@ -11,7 +11,8 @@ let
     url = "https://github.com/KhronosGroup/MoltenVK.git";
     rev = "70749b0618695128abb886b4c6808bc9124786c0";
   };
-in { nixpkgs ? nixpkgs' }:
+in { nixpkgs ? nixpkgs', xcodeBaseDir ? "/Applications/Xcode.app"
+, xcodeVersion ? "11.3.1" }:
 with nixpkgs;
 let
 
@@ -67,8 +68,8 @@ let
 
   xcodeenv = import (xcodeenvSrc + /xcodeenv) { inherit (nixpkgs) stdenv; };
   xcodewrapper = xcodeenv.composeXcodeWrapper {
-    version = "11.2.1";
-    xcodeBaseDir = "/Applications/Xcode.app";
+    inherit xcodeBaseDir;
+    version = xcodeVersion;
   };
 
   moltenVKWithExternals = stdenv.mkDerivation rec {
