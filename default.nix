@@ -95,6 +95,8 @@ let
       cp --no-preserve=mode -r "${vulkan-tools.src}" External/Vulkan-Tools
       cp --no-preserve=mode -r "${vulkanSamples.src}" External/VulkanSamples
       xcodebuild -quiet -project "ExternalDependencies.xcodeproj"	-scheme "ExternalDependencies" -derivedDataPath "$out/build" build
+      mkdir $out/lib
+      ln -s $out/build/Build/Products/Release/* $out/lib
     '';
 
     propagatedBuildInputs = [
