@@ -95,7 +95,6 @@ let
       cp --no-preserve=mode -r "${vulkan-tools.src}" External/Vulkan-Tools
       cp --no-preserve=mode -r "${vulkanSamples.src}" External/VulkanSamples
       xcodebuild -quiet -project "ExternalDependencies.xcodeproj"	-scheme "ExternalDependencies" -derivedDataPath "$out/build" build
-      ln -s $out/build/Build/Products/Release/MoltenVK/macOS/dynamic $out/lib
     '';
 
     propagatedBuildInputs = [
@@ -127,6 +126,7 @@ in stdenv.mkDerivation rec {
     cd $out
     export PATH=${xcodewrapper}/bin:$PATH
     xcodebuild -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package" -derivedDataPath "$out/build" build
+    cp --no-preserve=mode -r $out/build/Build/Products/Release $out/lib
   '';
   propagatedBuildInputs = [
     spirv-cross
