@@ -97,16 +97,16 @@ let
       xcodebuild -quiet -project "ExternalDependencies.xcodeproj"	-scheme "ExternalDependencies" -derivedDataPath "$out/build" build
     '';
 
-    propagatedBuildInputs = [
-      spirv-cross
-      cereal
-      vulkan-portability
-      vulkan-tools
-      vulkan-headers
-      glslang
-      spirv-headers
-      spirv-tools
-    ];
+    # propagatedBuildInputs = [
+    #   spirv-cross
+    #   cereal
+    #   vulkan-portability
+    #   vulkan-tools
+    #   vulkan-headers
+    #   glslang
+    #   spirv-headers
+    #   spirv-tools
+    # ];
 
     nativeBuildInputs = [ pkgconfig cmake python3 ninja xcodewrapper ];
     buildInputs = [ ];
@@ -116,7 +116,7 @@ let
 in {
  inherit vulkan-headers vulkan-layers vulkan-loader vulkan-tools glslang;
  moltenVK = stdenv.mkDerivation rec {
-  pname = "MoltenVk";
+  pname = "MoltenVK";
   src = moltenVKWithExternals;
   version = moltenVKWithExternals.version;
   buildCommand = ''
@@ -128,20 +128,20 @@ in {
     cd $out
     export PATH=${xcodewrapper}/bin:$PATH
     xcodebuild -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package" -derivedDataPath "$out/build" build
-    cp --no-preserve=mode -r $out/build/Build/Products/Release $out/lib
+    cp --no-preserve=mode -r $out/Package/Latest/MoltenVK/macOS/framework/MoltenVK.framework $out/lib
   '';
-  propagatedBuildInputs = [
-    spirv-cross
-    cereal
-    vulkan-portability
-    vulkan-tools
-    vulkan-headers
-    glslang
-    spirv-headers
-    spirv-tools
-    vulkan-loader
-    vulkan-layers
-  ];
+  # propagatedBuildInputs = [
+  #   spirv-cross
+  #   cereal
+  #   vulkan-portability
+  #   vulkan-tools
+  #   vulkan-headers
+  #   glslang
+  #   spirv-headers
+  #   spirv-tools
+  #   vulkan-loader
+  #   vulkan-layers
+  # ];
   # TODO: iOS condition here.
   setupHook = writeText "setup-hook" ''
     export VK_LAYER_PATH=${vulkan-layers}/share/vulkan/explicit_layer.d
