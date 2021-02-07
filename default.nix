@@ -128,7 +128,7 @@ in {
     cd $out
     export PATH=${xcodewrapper}/bin:$PATH
     xcodebuild -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package" -derivedDataPath "$out/build" build
-    cp --no-preserve=mode -r $out/Package/Latest/MoltenVK/macOS/framework/MoltenVK.framework $out/lib
+    cp --no-preserve=mode -r $out/Package/Latest/MoltenVK/macOS/dynamic $out/lib
   '';
   # propagatedBuildInputs = [
   #   spirv-cross
