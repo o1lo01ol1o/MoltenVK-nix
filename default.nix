@@ -114,7 +114,7 @@ let
 
   };
 in {
- inherit vulkan-headers vulkan-layers glslang;
+ inherit vulkan-headers vulkan-layers vulkan-loader vulkan-tools glslang;
  moltenVK = stdenv.mkDerivation rec {
   pname = "MoltenVk";
   src = moltenVKWithExternals;
