@@ -113,7 +113,9 @@ let
     enableParallelBuilding = true;
 
   };
-in stdenv.mkDerivation rec {
+in {
+ inherit vulkan-headers vulkan-layers glslang;
+ moltenVK = stdenv.mkDerivation rec {
   pname = "MoltenVk";
   src = moltenVKWithExternals;
   version = moltenVKWithExternals.version;
@@ -147,5 +149,6 @@ in stdenv.mkDerivation rec {
     export DYLD_LIBRARY_PATH=@out@/Package/Release/MoltenVK/macOS/dynamic/
   '';
 
+};
 }
 
