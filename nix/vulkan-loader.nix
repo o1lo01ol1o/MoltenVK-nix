@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, cmake, python3, ninja, vulkan-headers}:
+{ stdenv, fetchFromGitHub, cmake, python3, pkg-config, ninja, vulkan-headers}:
 
 
 stdenv.mkDerivation rec {
@@ -10,17 +10,25 @@ stdenv.mkDerivation rec {
     };
 
 
-  cmakeFlags = ''
-    -DVULKAN_HEADERS_INSTALL_DIR=${vulkan-headers}
-    '';
+  nativeBuildInputs = [ pkg-config cmake ];
+  buildInputs = [ python3 ];
 
-  enableParallelBuilding = true;
-  # Is this needed?
-  #     # Help vulkan-loader find the validation layers
-  # setupHook = writeText "setup-hook" ''
-  #   export XDG_DATA_DIRS=@out@/share:$XDG_DATA_DIRS
+  cmakeFlags = [
+    "-DVULKAN_HEADERS_INSTALL_DIR=${vulkan-headers}"
+    "-DCMAKE_INSTALL_INCLUDEDIR=${vulkan-headers}/include"
+  ];
+
+  outputs = [ "out" "dev" ];
+
+  # doInstallCheck = true;
+
+  # installCheckPhase = ''
+  #   grep -q "${vulkan-headers}/include" $dev/lib/pkgconfig/vulkan.pc || {
+  #     echo vulkan-headers include directory not found in pkg-config file
+  #     exit 1
+  #   }
   # '';
 
-  buildInputs = [ cmake python3 ninja vulkan-headers ];
+  
 
 }

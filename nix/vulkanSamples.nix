@@ -14,7 +14,6 @@ stdenv.mkDerivation rec {
       };
   
 
-  enableParallelBuilding = true;
 
   buildInputs = [ cmake python3 ];
 

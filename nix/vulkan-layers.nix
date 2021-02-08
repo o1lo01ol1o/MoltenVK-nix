@@ -26,8 +26,6 @@ stdenv.mkDerivation rec {
     -DGLSLANG_INSTALL_DIR=${glslang}
     '';
 
-  enableParallelBuilding = true;
-
   buildInputs = [ cmake python3 ninja glslang vulkan-headers spirv-headers spirv-tools];
 
 }

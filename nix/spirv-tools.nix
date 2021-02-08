@@ -22,7 +22,6 @@ stdenv.mkDerivation rec {
     ninja 
   '';
 
-  enableParallelBuilding = true;
 
   buildInputs = [ python3 cmake ninja ];
 

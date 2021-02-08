@@ -18,7 +18,6 @@ in stdenv.mkDerivation rec {
   passthru = { inherit spirv-tools spirv-headers; };
 
   nativeBuildInputs = [ cmake python3 bison jq ];
-  enableParallelBuilding = true;
 
   postPatch = ''
     cp --no-preserve=mode -r "${spirv-tools.src}" External/spirv-tools

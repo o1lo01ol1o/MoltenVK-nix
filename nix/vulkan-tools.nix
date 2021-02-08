@@ -24,7 +24,6 @@ stdenv.mkDerivation rec {
     # ninja 
     '';
 
-  enableParallelBuilding = true;
 
   buildInputs = [ cmake python3 ninja glslang];
 

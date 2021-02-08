@@ -7,7 +7,7 @@ in
 
 
 stdenv.mkDerivation rec {
-  name = "Vulkan-Headers";
+  name = "vulkan-headers";
   inherit rev;
 
     src = builtins.fetchGit {
@@ -15,8 +15,12 @@ stdenv.mkDerivation rec {
       rev = "${rev}";
     };
 
-  enableParallelBuilding = true;
 
-  buildInputs = [ cmake python3 ninja ];
+  nativeBuildInputs = [ cmake ];
+  meta = with lib; {
+    description = "Vulkan Header files and API registry";
+    homepage    = "https://www.lunarg.com";
+    license     = licenses.asl20;
+  };
 
 }

@@ -53,7 +53,7 @@ let
   };
 
   vulkan-loader = import ./nix/vulkan-loader.nix {
-    inherit stdenv fetchFromGitHub cmake python3 ninja vulkan-headers;
+    inherit stdenv fetchFromGitHub cmake python3 pkg-config ninja vulkan-headers;
   };
 
   vulkan-layers = import ./nix/vulkan-layers.nix {
@@ -97,16 +97,16 @@ let
       xcodebuild -quiet -project "ExternalDependencies.xcodeproj"	-scheme "ExternalDependencies" -derivedDataPath "$out/build" build
     '';
 
-    # propagatedBuildInputs = [
-    #   spirv-cross
-    #   cereal
-    #   vulkan-portability
-    #   vulkan-tools
-    #   vulkan-headers
-    #   glslang
-    #   spirv-headers
-    #   spirv-tools
-    # ];
+    propagatedBuildInputs = [
+      spirv-cross
+      cereal
+      vulkan-portability
+      vulkan-tools
+      vulkan-headers
+      glslang
+      spirv-headers
+      spirv-tools
+    ];
 
     nativeBuildInputs = [ pkgconfig cmake python3 ninja xcodewrapper ];
     buildInputs = [ ];
@@ -130,18 +130,18 @@ in {
     xcodebuild -quiet -project MoltenVKPackaging.xcodeproj -scheme "MoltenVK Package" -derivedDataPath "$out/build" build
     cp --no-preserve=mode -r $out/Package/Latest/MoltenVK/macOS/dynamic $out/lib
   '';
-  # propagatedBuildInputs = [
-  #   spirv-cross
-  #   cereal
-  #   vulkan-portability
-  #   vulkan-tools
-  #   vulkan-headers
-  #   glslang
-  #   spirv-headers
-  #   spirv-tools
-  #   vulkan-loader
-  #   vulkan-layers
-  # ];
+  propagatedBuildInputs = [
+    spirv-cross
+    cereal
+    vulkan-portability
+    vulkan-tools
+    vulkan-headers
+    glslang
+    spirv-headers
+    spirv-tools
+    vulkan-loader
+    vulkan-layers
+  ];
   # TODO: iOS condition here.
   setupHook = writeText "setup-hook" ''
     export VK_LAYER_PATH=${vulkan-layers}/share/vulkan/explicit_layer.d
